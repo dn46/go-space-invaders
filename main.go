@@ -1,9 +1,16 @@
 package main
 
 import (
-	"github.com/dn46/goRayLib/window"
+	"log"
+
+	"github.com/dn46/goRayLib/game"
 )
 
 func main() {
-	window.StartWindow()
+	g := game.NewGame()
+
+	err := g.StartWindow()
+	if err != nil {
+		log.Fatalf("failed to start game window: %v", err)
+	}
 }
