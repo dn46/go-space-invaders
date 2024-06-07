@@ -53,20 +53,7 @@ func (g *Game) StartWindow() error {
 		raylib.DrawTexture(g.Ship, g.xCoords, g.yCoords, raylib.White) // drawing our ship
 
 		// ship movement
-		if raylib.IsKeyDown(raylib.KeyD) {
-			if g.Ship.Width+g.xCoords+5 >= g.SCREEN_WIDTH {
-			} else {
-				g.xCoords += 5
-			}
-
-		}
-
-		if raylib.IsKeyDown(raylib.KeyA) {
-			if g.xCoords-1 <= 0 {
-			} else {
-				g.xCoords -= 5
-			}
-		}
+		g.moveShip()
 
 		raylib.EndDrawing()
 	}
