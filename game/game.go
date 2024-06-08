@@ -2,6 +2,7 @@ package game
 
 import (
 	"errors"
+	"time"
 
 	raylib "github.com/gen2brain/raylib-go/raylib"
 )
@@ -18,6 +19,7 @@ type Game struct {
 	yCoords       int32
 	Ship          raylib.Texture2D
 	Bullets       []*Bullet
+	LastShot      time.Time
 }
 
 func NewGame() *Game {
@@ -56,6 +58,9 @@ func (g *Game) StartWindow() error {
 
 		// ship movement
 		g.moveShip()
+		// ship bullets
+		g.FireBullet()
+		g.DrawBullet()
 
 		raylib.EndDrawing()
 	}
