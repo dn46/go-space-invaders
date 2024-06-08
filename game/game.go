@@ -17,6 +17,7 @@ type Game struct {
 	xCoords       int32
 	yCoords       int32
 	Ship          raylib.Texture2D
+	Bullets       []*Bullet
 }
 
 func NewGame() *Game {
@@ -25,6 +26,7 @@ func NewGame() *Game {
 		SCREEN_HEIGHT: 600,
 		xCoords:       2,
 		yCoords:       500,
+		Bullets:       []*Bullet{},
 	}
 }
 
