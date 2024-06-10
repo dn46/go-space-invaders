@@ -17,21 +17,21 @@ type Bullet struct {
 	Color    raylib.Color
 }
 
-func NewBullet(g *Game) *Bullet {
+func NewBullet(s *Ship) *Bullet {
 	return &Bullet{
-		Xpos:     g.xCoords + 50,
-		Ypos:     g.yCoords + 25,
+		Xpos:     s.Xpos + 50,
+		Ypos:     s.Ypos + 25,
 		velocity: 5,
-		radius:   10,
+		radius:   7,
 		Draw:     true,
 		Color:    raylib.White,
 	}
 }
 
-func (g *Game) FireBullet() {
+func (g *Game) FireBullet(s *Ship) {
 
 	if raylib.IsKeyDown(raylib.KeySpace) && time.Since(g.LastShot) >= shotDelay {
-		current_bullet := NewBullet(g)
+		current_bullet := NewBullet(s)
 		g.Bullets = append(g.Bullets, current_bullet)
 		g.LastShot = time.Now()
 	}
