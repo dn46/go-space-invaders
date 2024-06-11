@@ -11,12 +11,14 @@ var (
 )
 
 type Enemy struct {
-	Xpos      int32
-	Ypos      int32
-	imageDown bool // this is to change between images
-	draw      bool // dead enemies should not be drawn
-	EnemyUp   raylib.Texture2D
-	EnemyDown raylib.Texture2D
+	Xpos         int32
+	Ypos         int32
+	imageDown    bool // this is to change between images
+	draw         bool // dead enemies should not be drawn
+	EnemyUp      raylib.Texture2D
+	EnemyDown    raylib.Texture2D
+	Speed        int
+	frameCounter int
 }
 
 func NewEnemy() *Enemy {
@@ -51,6 +53,7 @@ func NewEnemy() *Enemy {
 		draw:      true,
 		EnemyUp:   enemyUp,
 		EnemyDown: enemyDown,
+		Speed:     1,
 	}
 }
 
@@ -65,11 +68,23 @@ func (g *Game) CreateEnemy() {
 func (g *Game) DrawEnemy() {
 	for _, current_enemy := range g.Enemies {
 		if current_enemy.draw {
+			if current_enemy.frameCounter%60 == 0 { // switch image every 60 frames
+				current_enemy.imageDown = !current_enemy.imageDown
+			}
 			if current_enemy.imageDown { // draw the down image
 				raylib.DrawTexture(current_enemy.EnemyDown, current_enemy.Xpos, current_enemy.Ypos, raylib.White)
 			} else { // draw the up image
 				raylib.DrawTexture(current_enemy.EnemyUp, current_enemy.Xpos, current_enemy.Ypos, raylib.White)
 			}
+			current_enemy.frameCounter++
 		}
+
+		if current_enemy.Xpos <= 0 {
+			current_enemy.Speed = 1
+		} else if current_enemy.Xpos >= g.SCREEN_WIDTH {
+			current_enemy.Speed = -1
+		}
+
+		current_enemy.Xpos += int32(current_enemy.Speed)
 	}
 }

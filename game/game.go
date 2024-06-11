@@ -38,7 +38,6 @@ func (g *Game) StartWindow() error {
 	defer raylib.CloseWindow()
 
 	g.Ship = NewShip() // the ship has to be initialized after the window opens
-	// g.Enemy = NewEnemy()
 	g.CreateEnemy()
 
 	raylib.SetTargetFPS(60)
