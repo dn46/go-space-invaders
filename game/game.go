@@ -50,6 +50,7 @@ func (g *Game) StartWindow() error {
 		raylib.DrawTexture(g.Ship.Image, g.Ship.Xpos, g.Ship.Ypos, raylib.White) // drawing our ship
 		// raylib.DrawTexture(g.Enemy.EnemyUp, g.Enemy.Xpos, g.Enemy.Ypos, raylib.Blue) // drawing the enemy (test)
 
+		g.UpdateEnemy()
 		g.DrawEnemy()
 		// ship movement
 		g.Ship.moveShip(g.SCREEN_WIDTH)

@@ -65,26 +65,41 @@ func (g *Game) CreateEnemy() {
 	}
 }
 
+func (g *Game) UpdateEnemy() {
+	for i := 0; i < len(g.Enemies); i++ {
+		current_enemy := g.Enemies[i]
+
+		// Update frame counter and image
+		current_enemy.frameCounter++
+		if current_enemy.frameCounter%60 == 0 {
+			current_enemy.imageDown = !current_enemy.imageDown
+		}
+
+		// Update position
+		current_enemy.Xpos += int32(current_enemy.Speed)
+
+		// Bounce off walls
+		if current_enemy.Xpos <= 0 {
+			current_enemy.Speed = 1
+		} else if current_enemy.Xpos+int32(current_enemy.EnemyUp.Width) >= g.SCREEN_WIDTH {
+			current_enemy.Speed = -1
+		}
+
+		// Move down when hitting a wall
+		if current_enemy.Xpos == 0 || current_enemy.Xpos+int32(current_enemy.EnemyUp.Width) == g.SCREEN_WIDTH {
+			current_enemy.Ypos += 5
+		}
+	}
+}
+
 func (g *Game) DrawEnemy() {
 	for _, current_enemy := range g.Enemies {
 		if current_enemy.draw {
-			if current_enemy.frameCounter%60 == 0 { // switch image every 60 frames
-				current_enemy.imageDown = !current_enemy.imageDown
-			}
 			if current_enemy.imageDown { // draw the down image
 				raylib.DrawTexture(current_enemy.EnemyDown, current_enemy.Xpos, current_enemy.Ypos, raylib.White)
 			} else { // draw the up image
 				raylib.DrawTexture(current_enemy.EnemyUp, current_enemy.Xpos, current_enemy.Ypos, raylib.White)
 			}
-			current_enemy.frameCounter++
 		}
-
-		if current_enemy.Xpos <= 0 {
-			current_enemy.Speed = 1
-		} else if current_enemy.Xpos >= g.SCREEN_WIDTH {
-			current_enemy.Speed = -1
-		}
-
-		current_enemy.Xpos += int32(current_enemy.Speed)
 	}
 }
