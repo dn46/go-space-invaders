@@ -29,6 +29,7 @@ func NewGame() *Game {
 		Bullets:       []*Bullet{},
 		Enemies:       []*Enemy{},
 	}
+
 }
 
 func (g *Game) StartWindow() error {
@@ -37,7 +38,8 @@ func (g *Game) StartWindow() error {
 	defer raylib.CloseWindow()
 
 	g.Ship = NewShip() // the ship has to be initialized after the window opens
-	g.Enemy = NewEnemy()
+	// g.Enemy = NewEnemy()
+	g.CreateEnemy()
 
 	raylib.SetTargetFPS(60)
 
@@ -46,9 +48,10 @@ func (g *Game) StartWindow() error {
 
 		raylib.ClearBackground(raylib.Black)
 
-		raylib.DrawTexture(g.Ship.Image, g.Ship.Xpos, g.Ship.Ypos, raylib.White)     // drawing our ship
-		raylib.DrawTexture(g.Enemy.EnemyUp, g.Enemy.Xpos, g.Enemy.Ypos, raylib.Blue) // drawing the enemy (test)
+		raylib.DrawTexture(g.Ship.Image, g.Ship.Xpos, g.Ship.Ypos, raylib.White) // drawing our ship
+		// raylib.DrawTexture(g.Enemy.EnemyUp, g.Enemy.Xpos, g.Enemy.Ypos, raylib.Blue) // drawing the enemy (test)
 
+		g.DrawEnemy()
 		// ship movement
 		g.Ship.moveShip(g.SCREEN_WIDTH)
 		// ship bullets

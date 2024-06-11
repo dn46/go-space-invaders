@@ -6,6 +6,10 @@ import (
 	raylib "github.com/gen2brain/raylib-go/raylib"
 )
 
+var (
+	numberEnemies = 7
+)
+
 type Enemy struct {
 	Xpos      int32
 	Ypos      int32
@@ -41,11 +45,31 @@ func NewEnemy() *Enemy {
 	raylib.UnloadImage(EnemyImg2)
 
 	return &Enemy{
-		Xpos:      2,
+		Xpos:      10,
 		Ypos:      100,
-		imageDown: false,
-		draw:      false,
+		imageDown: true,
+		draw:      true,
 		EnemyUp:   enemyUp,
 		EnemyDown: enemyDown,
+	}
+}
+
+func (g *Game) CreateEnemy() {
+	for i := 0; i < numberEnemies; i++ {
+		current_enemy := NewEnemy()
+		current_enemy.Xpos += int32(i) * 75
+		g.Enemies = append(g.Enemies, current_enemy)
+	}
+}
+
+func (g *Game) DrawEnemy() {
+	for _, current_enemy := range g.Enemies {
+		if current_enemy.draw {
+			if current_enemy.imageDown { // draw the down image
+				raylib.DrawTexture(current_enemy.EnemyDown, current_enemy.Xpos, current_enemy.Ypos, raylib.White)
+			} else { // draw the up image
+				raylib.DrawTexture(current_enemy.EnemyUp, current_enemy.Xpos, current_enemy.Ypos, raylib.White)
+			}
+		}
 	}
 }
