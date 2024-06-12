@@ -7,9 +7,11 @@ import (
 )
 
 type Ship struct {
-	Xpos  int32
-	Ypos  int32
-	Image raylib.Texture2D
+	Xpos      int32
+	Ypos      int32
+	Health    int
+	Image     raylib.Texture2D
+	Rectangle raylib.Rectangle
 }
 
 func NewShip() *Ship {
@@ -28,9 +30,10 @@ func NewShip() *Ship {
 	raylib.UnloadImage(ShipImg) // freeing the image after being loaded to a texture
 
 	return &Ship{
-		Xpos:  2,
-		Ypos:  500,
-		Image: shipTexture,
+		Xpos:      2,
+		Ypos:      500,
+		Image:     shipTexture,
+		Rectangle: raylib.NewRectangle(2, 500, float32(shipTexture.Width), float32(shipTexture.Height)),
 	}
 }
 
@@ -47,4 +50,8 @@ func (s *Ship) moveShip(screenWidth int32) {
 			s.Xpos -= 5
 		}
 	}
+
+	// update the ships rectangle
+	s.Rectangle.X = float32(s.Xpos)
+	s.Rectangle.Y = float32(s.Ypos)
 }

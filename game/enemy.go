@@ -18,6 +18,8 @@ type Enemy struct {
 	EnemyUp      raylib.Texture2D
 	EnemyDown    raylib.Texture2D
 	Speed        int
+	Health       int
+	Rectangle    raylib.Rectangle
 	frameCounter int
 }
 
@@ -54,6 +56,8 @@ func NewEnemy() *Enemy {
 		EnemyUp:   enemyUp,
 		EnemyDown: enemyDown,
 		Speed:     1,
+		Health:    1,
+		Rectangle: raylib.NewRectangle(10, 100, float32(enemyDown.Width), float32(enemyUp.Height)),
 	}
 }
 
@@ -77,6 +81,10 @@ func (g *Game) UpdateEnemy() {
 
 		// Update position
 		current_enemy.Xpos += int32(current_enemy.Speed)
+
+		// update the rectangle position
+		current_enemy.Rectangle.X = float32(current_enemy.Xpos)
+		current_enemy.Rectangle.Y = float32(current_enemy.Ypos)
 
 		// Bounce off walls
 		if current_enemy.Xpos <= 0 {

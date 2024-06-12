@@ -70,6 +70,31 @@ func (g *Game) DrawBullet() {
 			if current_bullet.Ypos < 0 || current_bullet.Ypos > g.SCREEN_HEIGHT {
 				g.Bullets[index1].Draw = false
 			}
+
+			// check for collisions with enemies
+			for index2, enemy := range g.Enemies {
+				if raylib.CheckCollisionRecs(raylib.NewRectangle(float32(current_bullet.Xpos), float32(current_bullet.Ypos), current_bullet.radius, current_bullet.radius), enemy.Rectangle) {
+					// collision detected, handle it here
+					g.Bullets[index1].Draw = false
+					g.Enemies[index2].Health -= 1
+					if g.Enemies[index2].Health <= 0 {
+						g.Enemies = append(g.Enemies[:index2], g.Enemies[index2+1:]...)
+					}
+					break
+				}
+			}
+
+			// check for collisions with the player's ship
+			if raylib.CheckCollisionRecs(raylib.NewRectangle(float32(current_bullet.Xpos), float32(current_bullet.Ypos), current_bullet.radius, current_bullet.radius), g.Ship.Rectangle) {
+				// collision detected, handle it here
+				g.Bullets[index1].Draw = false
+				g.Ship.Health -= 1
+
+				if g.Ship.Health <= 0 {
+					// game over
+					g.IsGameOver = true
+				}
+			}
 		}
 	}
 }
