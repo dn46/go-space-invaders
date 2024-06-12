@@ -13,21 +13,24 @@ var (
 )
 
 type Game struct {
-	SCREEN_WIDTH  int32
-	SCREEN_HEIGHT int32
-	Ship          *Ship
-	Enemy         *Enemy
-	Bullets       []*Bullet
-	Enemies       []*Enemy
-	LastShot      time.Time
-	IsGameOver    bool
+	SCREEN_WIDTH   int32
+	SCREEN_HEIGHT  int32
+	Ship           *Ship
+	Enemy          *Enemy
+	PlayerBullets  []*Bullet
+	EnemyBullets   []*Bullet
+	Enemies        []*Enemy
+	LastPlayerShot time.Time
+	LastEnemyShot  time.Time
+	IsGameOver     bool
 }
 
 func NewGame() *Game {
 	return &Game{
 		SCREEN_WIDTH:  800,
 		SCREEN_HEIGHT: 600,
-		Bullets:       []*Bullet{},
+		PlayerBullets: []*Bullet{},
+		EnemyBullets:  []*Bullet{},
 		Enemies:       []*Enemy{},
 	}
 
