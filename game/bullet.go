@@ -1,6 +1,7 @@
 package game
 
 import (
+	"math/rand"
 	"time"
 
 	raylib "github.com/gen2brain/raylib-go/raylib"
@@ -17,7 +18,7 @@ type Bullet struct {
 	Color    raylib.Color
 }
 
-func NewBullet(s *Ship) *Bullet {
+func NewBulletFromShip(s *Ship) *Bullet {
 	return &Bullet{
 		Xpos:     s.Xpos + 50,
 		Ypos:     s.Ypos + 25,
@@ -28,10 +29,31 @@ func NewBullet(s *Ship) *Bullet {
 	}
 }
 
+func NewBulletFromEnemy(e *Enemy) *Bullet {
+	return &Bullet{
+		Xpos:     e.Xpos + 50,
+		Ypos:     e.Ypos + 25,
+		velocity: -5, // negative so the bullet moves down
+		radius:   7,
+		Draw:     true,
+		Color:    raylib.Red,
+	}
+}
+
 func (g *Game) FireBullet(s *Ship) {
 
 	if raylib.IsKeyDown(raylib.KeySpace) && time.Since(g.LastShot) >= shotDelay {
-		current_bullet := NewBullet(s)
+		current_bullet := NewBulletFromShip(s)
+		g.Bullets = append(g.Bullets, current_bullet)
+		g.LastShot = time.Now()
+	}
+}
+
+func (g *Game) FireEnemyBullet(e *Enemy) {
+	chance := rand.Intn(100) + 1
+
+	if chance <= 5 && time.Since(g.LastShot) >= shotDelay {
+		current_bullet := NewBulletFromEnemy(e)
 		g.Bullets = append(g.Bullets, current_bullet)
 		g.LastShot = time.Now()
 	}

@@ -56,6 +56,12 @@ func (g *Game) StartWindow() error {
 		g.Ship.moveShip(g.SCREEN_WIDTH)
 		// ship bullets
 		g.FireBullet(g.Ship)
+
+		// fire enemy bullets for every enemy
+		for _, enemy := range g.Enemies {
+			g.FireEnemyBullet(enemy)
+		}
+
 		g.DrawBullet()
 
 		raylib.EndDrawing()

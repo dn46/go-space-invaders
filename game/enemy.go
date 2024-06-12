@@ -67,7 +67,7 @@ func (g *Game) CreateEnemy() {
 
 func (g *Game) UpdateEnemy() {
 	for i := 0; i < len(g.Enemies); i++ {
-		current_enemy := g.Enemies[i]
+		current_enemy := g.Enemies[i] // in order for changes to affect the original enemies in g.Enemies, we use the loop with the index
 
 		// Update frame counter and image
 		current_enemy.frameCounter++
