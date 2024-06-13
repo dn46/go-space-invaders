@@ -23,6 +23,8 @@ type Game struct {
 	Enemies        []*Enemy
 	LastPlayerShot time.Time
 	LastEnemyShot  time.Time
+	Lives          int
+	Score          int
 	IsGameOver     bool
 }
 
@@ -33,6 +35,7 @@ func NewGame() *Game {
 		PlayerBullets: []*Bullet{},
 		EnemyBullets:  []*Bullet{},
 		Enemies:       []*Enemy{},
+		Score:         0,
 	}
 
 }
@@ -63,7 +66,10 @@ func (g *Game) StartWindow() error {
 
 		raylib.ClearBackground(raylib.Black)
 
-		if g.IsGameOver {
+		dt := raylib.GetFrameTime()
+		g.Ship.UpdateShip(dt)
+
+		if g.Ship.IsDestroyed() {
 			raylib.DrawText("Game Over", g.SCREEN_WIDTH/2, g.SCREEN_HEIGHT/2, 20, raylib.Red)
 			if raygui.Button(raylib.NewRectangle(float32(g.SCREEN_WIDTH/2-50), float32(g.SCREEN_HEIGHT/2+30), 100, 30), "Try Again") {
 				g.ResetGame()

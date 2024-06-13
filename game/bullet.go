@@ -81,11 +81,8 @@ func (g *Game) CheckBulletShipCollision() {
 		if raylib.CheckCollisionRecs(raylib.NewRectangle(float32(current_bullet.Xpos), float32(current_bullet.Ypos), current_bullet.radius, current_bullet.radius), g.Ship.Rectangle) {
 			// collision detected, handle it here
 			g.EnemyBullets[index1].Draw = false
-			g.Ship.Health -= 1
-
-			if g.Ship.Health <= 0 {
-				// game over
-				g.IsGameOver = true
+			if !g.Ship.IsInvincible {
+				g.Ship.Hit()
 			}
 		}
 	}

@@ -7,11 +7,13 @@ import (
 )
 
 type Ship struct {
-	Xpos      int32
-	Ypos      int32
-	Health    int
-	Image     raylib.Texture2D
-	Rectangle raylib.Rectangle
+	Xpos           int32
+	Ypos           int32
+	Health         int
+	Image          raylib.Texture2D
+	Rectangle      raylib.Rectangle
+	IsInvincible   bool
+	InvincibleTime float32
 }
 
 func NewShip() *Ship {
@@ -30,11 +32,35 @@ func NewShip() *Ship {
 	raylib.UnloadImage(ShipImg) // freeing the image after being loaded to a texture
 
 	return &Ship{
-		Xpos:      2,
-		Ypos:      500,
-		Image:     shipTexture,
-		Rectangle: raylib.NewRectangle(2, 500, float32(shipTexture.Width), float32(shipTexture.Height)),
+		Xpos:           2,
+		Ypos:           500,
+		Image:          shipTexture,
+		Health:         3,
+		Rectangle:      raylib.NewRectangle(2, 500, float32(shipTexture.Width), float32(shipTexture.Height)),
+		IsInvincible:   false,
+		InvincibleTime: 0,
 	}
+}
+
+func (s *Ship) Hit() {
+	if !s.IsInvincible {
+		s.Health--
+		s.IsInvincible = true
+		s.InvincibleTime = 2
+	}
+}
+
+func (s *Ship) UpdateShip(dt float32) {
+	if s.IsInvincible {
+		s.InvincibleTime -= dt
+		if s.InvincibleTime <= 0 {
+			s.IsInvincible = false
+		}
+	}
+}
+
+func (s *Ship) IsDestroyed() bool {
+	return s.Health <= 0
 }
 
 func (s *Ship) moveShip(screenWidth int32) {
