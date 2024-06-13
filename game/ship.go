@@ -9,7 +9,7 @@ import (
 type Ship struct {
 	Xpos           int32
 	Ypos           int32
-	Health         int
+	Health         int32
 	Image          raylib.Texture2D
 	Rectangle      raylib.Rectangle
 	IsInvincible   bool
@@ -46,7 +46,7 @@ func (s *Ship) Hit() {
 	if !s.IsInvincible {
 		s.Health--
 		s.IsInvincible = true
-		s.InvincibleTime = 2
+		s.InvincibleTime = 1
 	}
 }
 

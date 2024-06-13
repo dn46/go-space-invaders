@@ -61,29 +61,48 @@ func (g *Game) FireEnemyBullet(e *Enemy) {
 }
 
 func (g *Game) CheckBulletEnemyCollision() {
-	for index1, current_bullet := range g.PlayerBullets {
-		for index2, enemy := range g.Enemies {
-			if raylib.CheckCollisionRecs(raylib.NewRectangle(float32(current_bullet.Xpos), float32(current_bullet.Ypos), current_bullet.radius, current_bullet.radius), enemy.Rectangle) {
-				// collision detected, handle it here
-				g.PlayerBullets[index1].Draw = false
-				g.Enemies[index2].Health -= 1
-				if g.Enemies[index2].Health <= 0 {
-					g.Enemies = append(g.Enemies[:index2], g.Enemies[index2+1:]...)
+	i := 0
+	for i < len(g.PlayerBullets) {
+		bullet := g.PlayerBullets[i]
+		collision := false
+		j := 0
+		for j < len(g.Enemies) {
+			enemy := g.Enemies[j]
+			if raylib.CheckCollisionRecs(raylib.NewRectangle(float32(bullet.Xpos), float32(bullet.Ypos), bullet.radius, bullet.radius), enemy.Rectangle) {
+				// collision detected, decrease health and handle the score
+				g.Enemies[j].Health -= 1
+				g.Score++
+				if g.Enemies[j].Health <= 0 {
+					// remove the enemy
+					g.Enemies = append(g.Enemies[:j], g.Enemies[j+1:]...)
+				} else {
+					j++
 				}
+				// remove the bullet
+				g.PlayerBullets = append(g.PlayerBullets[:i], g.PlayerBullets[i+1:]...)
+				collision = true
 				break
+			} else {
+				j++
 			}
+		}
+		if !collision {
+			i++
 		}
 	}
 }
 
 func (g *Game) CheckBulletShipCollision() {
-	for index1, current_bullet := range g.EnemyBullets {
-		if raylib.CheckCollisionRecs(raylib.NewRectangle(float32(current_bullet.Xpos), float32(current_bullet.Ypos), current_bullet.radius, current_bullet.radius), g.Ship.Rectangle) {
-			// collision detected, handle it here
-			g.EnemyBullets[index1].Draw = false
-			if !g.Ship.IsInvincible {
-				g.Ship.Hit()
-			}
+	i := 0
+	for i < len(g.EnemyBullets) {
+		bullet := g.EnemyBullets[i]
+		if raylib.CheckCollisionRecs(raylib.NewRectangle(float32(bullet.Xpos), float32(bullet.Ypos), bullet.radius, bullet.radius), g.Ship.Rectangle) {
+			// collision detected, decrease health
+			g.Ship.Health -= 1
+			// remove the bullet (otherwise it will keep decreasing health in this space)
+			g.EnemyBullets = append(g.EnemyBullets[:i], g.EnemyBullets[i+1:]...)
+		} else {
+			i++
 		}
 	}
 }
@@ -100,10 +119,10 @@ func (g *Game) DrawBullet() {
 				g.PlayerBullets[index1].Draw = false
 			}
 		}
-
-		g.CheckBulletEnemyCollision()
-
 	}
+
+	// Check for bullet-enemy collisions after all bullets have been drawn
+	g.CheckBulletEnemyCollision()
 
 	// drawing the enemy's bullets
 	for index1, current_bullet := range g.EnemyBullets {
@@ -116,7 +135,8 @@ func (g *Game) DrawBullet() {
 				g.EnemyBullets[index1].Draw = false
 			}
 		}
-
-		g.CheckBulletShipCollision()
 	}
+
+	// Check for bullet-ship collisions after all bullets have been drawn
+	g.CheckBulletShipCollision()
 }

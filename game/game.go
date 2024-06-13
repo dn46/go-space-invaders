@@ -2,6 +2,7 @@ package game
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/gen2brain/raylib-go/raygui"
@@ -23,7 +24,6 @@ type Game struct {
 	Enemies        []*Enemy
 	LastPlayerShot time.Time
 	LastEnemyShot  time.Time
-	Lives          int
 	Score          int
 	IsGameOver     bool
 }
@@ -77,6 +77,15 @@ func (g *Game) StartWindow() error {
 		} else {
 			raylib.DrawTexture(g.Ship.Image, g.Ship.Xpos, g.Ship.Ypos, raylib.White) // drawing our ship
 			// raylib.DrawTexture(g.Enemy.EnemyUp, g.Enemy.Xpos, g.Enemy.Ypos, raylib.Blue) // drawing the enemy (test)
+
+			// draw the score
+			scoreText := fmt.Sprintf("Score: %d", g.Score)
+			raylib.DrawText(scoreText, 10, 10, 20, raylib.White)
+
+			// draw the lives
+			for i := 0; i < int(g.Ship.Health); i++ {
+				raylib.DrawTexture(g.Ship.Image, g.SCREEN_WIDTH-int32((int32(i)+1)*g.Ship.Image.Width)-10, 10, raylib.White)
+			}
 
 			g.UpdateEnemy()
 			g.DrawEnemy()
