@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/gen2brain/raylib-go/raygui"
 	raylib "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -36,6 +37,17 @@ func NewGame() *Game {
 
 }
 
+func (g *Game) ResetGame() {
+	g.Ship = NewShip()
+	g.PlayerBullets = []*Bullet{}
+	g.EnemyBullets = []*Bullet{}
+	g.Enemies = []*Enemy{}
+	g.IsGameOver = false
+	g.LastPlayerShot = time.Time{}
+	g.LastEnemyShot = time.Time{}
+	g.CreateEnemy()
+}
+
 func (g *Game) StartWindow() error {
 	raylib.InitWindow(g.SCREEN_WIDTH, g.SCREEN_HEIGHT, "space invaders")
 
@@ -53,6 +65,9 @@ func (g *Game) StartWindow() error {
 
 		if g.IsGameOver {
 			raylib.DrawText("Game Over", g.SCREEN_WIDTH/2, g.SCREEN_HEIGHT/2, 20, raylib.Red)
+			if raygui.Button(raylib.NewRectangle(float32(g.SCREEN_WIDTH/2-50), float32(g.SCREEN_HEIGHT/2+30), 100, 30), "Try Again") {
+				g.ResetGame()
+			}
 		} else {
 			raylib.DrawTexture(g.Ship.Image, g.Ship.Xpos, g.Ship.Ypos, raylib.White) // drawing our ship
 			// raylib.DrawTexture(g.Enemy.EnemyUp, g.Enemy.Xpos, g.Enemy.Ypos, raylib.Blue) // drawing the enemy (test)
