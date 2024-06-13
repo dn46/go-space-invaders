@@ -24,7 +24,7 @@ func NewBulletFromShip(s *Ship) *Bullet {
 		Xpos:     s.Xpos + 50,
 		Ypos:     s.Ypos + 25,
 		velocity: 5,
-		radius:   7,
+		radius:   3,
 		Draw:     true,
 		Color:    raylib.White,
 	}
@@ -35,7 +35,7 @@ func NewBulletFromEnemy(e *Enemy) *Bullet {
 		Xpos:     e.Xpos + 50,
 		Ypos:     e.Ypos + 25,
 		velocity: -5, // negative so the bullet moves down
-		radius:   7,
+		radius:   3,
 		Draw:     true,
 		Color:    raylib.Red,
 	}
@@ -61,33 +61,22 @@ func (g *Game) FireEnemyBullet(e *Enemy) {
 }
 
 func (g *Game) CheckBulletEnemyCollision() {
-	i := 0
-	for i < len(g.PlayerBullets) {
+	for i := len(g.PlayerBullets) - 1; i >= 0; i-- {
 		bullet := g.PlayerBullets[i]
-		collision := false
-		j := 0
-		for j < len(g.Enemies) {
+		for j := len(g.Enemies) - 1; j >= 0; j-- {
 			enemy := g.Enemies[j]
 			if raylib.CheckCollisionRecs(raylib.NewRectangle(float32(bullet.Xpos), float32(bullet.Ypos), bullet.radius, bullet.radius), enemy.Rectangle) {
 				// collision detected, decrease health and handle the score
-				g.Enemies[j].Health -= 1
+				enemy.Health -= 1
 				g.Score++
-				if g.Enemies[j].Health <= 0 {
+				if enemy.Health <= 0 {
 					// remove the enemy
 					g.Enemies = append(g.Enemies[:j], g.Enemies[j+1:]...)
-				} else {
-					j++
 				}
 				// remove the bullet
 				g.PlayerBullets = append(g.PlayerBullets[:i], g.PlayerBullets[i+1:]...)
-				collision = true
 				break
-			} else {
-				j++
 			}
-		}
-		if !collision {
-			i++
 		}
 	}
 }
