@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/dn46/goRayLib/game"
+	"github.com/dn46/go-space-invaders/game"
 )
 
 func main() {

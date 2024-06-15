@@ -1,4 +1,4 @@
-module github.com/dn46/goRayLib
+module github.com/dn46/go-space-invaders
 
 go 1.22.2
 
